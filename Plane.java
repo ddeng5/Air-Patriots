@@ -44,5 +44,65 @@ public class Plane {
 	public int[] getUpgradeCount(){return upgradeCount;}
 	public void setUpgradeCount(int [] l){upgradeCount = l;}
 
-	
+
+    public Plane(String t, GamePanel pan, Point p1,double heading ) {
+    	panel = pan;
+    	p=p1;
+    	Heading=heading;
+    	if (t.equals("heli")){ //there are three types of planes with all their stats below
+    		makeHeli();
+    	}else if (t.equals("bomber")){
+    		makeBomber();
+    	}else if (t.equals("jet")){
+    		makeJet();
+    	}
+    }
+    public void makeHeli(){//setting all of the stats for the helicopter
+    	glowx=25;
+    	glowy=25;
+
+    	fireRateM=75;
+    	powerM = 60;
+    	speedM = 90;
+    	radiusM = 85;
+
+
+    	type = "heli";
+    	HP = 250;
+    	maxHP=HP;
+    	Power = 15;
+    	Speed = 3;
+    	Radius = 800;
+    	coinCost=70;
+    	fireRate=30;
+    	sprite = new ImageIcon("images/heli.png").getImage();
+    	animation=new Image[4];
+    	for(int i=0;i<4;i++){
+    		animation[i]=new ImageIcon("images/blade"+(i+1)+".png").getImage();//the helicopter has an animation where the blade spins
+    	}
+    	planeHeight = sprite.getHeight(null);
+    	planeWidth= sprite.getWidth(null);
+    }
+    public void makeBomber(){//setting the stats for the bomber
+    	glowx=25;
+    	glowy=25;
+    	type = "bomber";
+    	HP = 225;
+    	maxHP=HP;
+    	Power = 10;
+    	Speed = 1;
+    	Radius = 100;
+    	coinCost=50;
+
+    	fireRateM=100;
+    	powerM = 150;
+    	speedM = 130;
+    	radiusM = 95;
+
+    	sprite = new ImageIcon("images/bomber.png").getImage();
+    	fireRate=50;
+    	planeHeight = sprite.getHeight(null);
+    	planeWidth= sprite.getWidth(null);
+    }
+    
 }
