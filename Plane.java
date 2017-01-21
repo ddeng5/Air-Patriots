@@ -205,5 +205,54 @@ public class Plane {
     	return (coinCost)/2;
     }
 
+    public void removeLast(){//just removes the last point from the list, used for when the user presses backspace
+    	if (Pos.size()>0){
+    		Pos.remove(Pos.size()-1);
+    	}
+    }
 
+    public void move(Graphics g,Plane pl,GamePanel game){//this function handles moving the plane and setting the directions
+    	shotCount++;
+    	if (moveType.equals("straight")){
+    		if (Pos.size()==0){//if you dont have any points in the path and your plane is off screen
+    			if (p.x+sprite.getHeight(null)>1280 || p.x<0){
+	    			Heading+=5*greaterAngle(Heading,Heading+180);//then we have to turn the plane around to get it back
+	    		}
+	    		if (p.y+sprite.getWidth(null)>750 || p.y<0){
+	    			Heading +=5*greaterAngle(Heading,Heading+180);//same thing just checking the top and bottom
+	    		}
+    		}
+
+    		p.setLocation(p.getX()+Math.cos(Math.toRadians(Heading))*Speed,p.getY()+Math.sin(Math.toRadians(Heading))*Speed);//move the plane in the direction of the heading and the distance is speed
+    		planeRect = new Rectangle((int)p.getX(),(int)p.getY(),planeHeight,planeWidth);//update the rect surrounding the plane each time its moved
+
+    	}
+    	if (Pos.size()!=0){//othewise if there are points in the path of the plane
+    		if (this==pl){//if this plane is the selcted plane
+    			for (int i=0; i<Pos.size();i++){//draw the current path that the plane is traveling along
+	    			g.drawImage(flag,(int)Pos.get(i).x,(int)Pos.get(i).y,game);
+	    		}
+
+	    		g.setColor(Color.RED);
+	    		if (loop){//if the plane is in a loop then change the line colour from red to green
+	    			g.setColor(Color.GREEN);
+	    		}
+	    		for (int i=0; i<Pos.size()-1;i++){
+	    			g.drawLine((int)Pos.get(i).x+10,(int)Pos.get(i).y+10,(int)Pos.get(i+1).x+10,(int)Pos.get(i+1).y+10);
+	    		}
+    		}
+
+    		double h1 = ((180+Math.toDegrees(Math.atan2((getY()-Pos.get(0).y),(getX()-Pos.get(0).x)))));//calculate the heading from where your plane is to the next point in the path
+    		if(isOffScreen(getX(),getY())==false || Math.abs(Math.abs(Heading%360)-h1)>=5){//if your plane is not off the screen and your heading is not within 5 degress of the desired heading
+    			Heading+=2*greaterAngle(Heading,h1);//then turn the heading until we are going in the right direction
+    		}
+    		if(planeRect.contains((int)Pos.get(0).x,(int)Pos.get(0).y)){//once we reach the next point in the path
+    			if (loop && Pos.size()>0){//if the plane is on a loop re add the point to the beginning
+    				Pos.add(Pos.get(0));
+    			}
+    			Pos.remove(0);//other wise remove it
+    		}
+    	}
+    	Heading=Heading%360;//just so that the heading does not get huge, not nessesary just so its easier to debug
+    }
 }
