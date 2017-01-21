@@ -104,5 +104,106 @@ public class Plane {
     	planeHeight = sprite.getHeight(null);
     	planeWidth= sprite.getWidth(null);
     }
-    
+
+
+    public void makeJet(){//setting the stats for the jet
+    	type = "jet";
+    	HP = 200;
+    	maxHP=HP;
+    	glowx=25;
+    	glowy=25;
+    	Power = 3;
+    	Speed = 2;
+    	Radius  = 600;
+    	coinCost=20;
+    	fireRate=5;
+
+    	fireRateM=50;
+    	powerM = 45;
+    	speedM = 75;
+    	radiusM = 60;
+
+    	sprite = new ImageIcon("images/jet.png").getImage();
+    	planeHeight = 100;
+    	planeWidth=100;
+    }
+    public void setMoveType(String n){//to change the moveType of the plane from straight to array
+    	moveType = n;
+    }
+
+    public void draw (Graphics g){//this function handles all of the drawing of the planes
+    	//drawing the planes hp bar
+    	g.setColor(Color.RED);
+    	g.fillRect(getX()-(maxHP/2),getY()-50,maxHP,3);
+    	g.setColor(Color.GREEN);
+    	g.fillRect(getX()-(maxHP/2),getY()-50,HP,3);
+    	//
+
+
+    	//rotating the screen, then drawing the sprite on the rotated screen, and then rotating the screen back to its original state
+    	Graphics2D g2D = (Graphics2D)g;
+		AffineTransform saveXform = g2D.getTransform();
+		AffineTransform at = new AffineTransform();
+		at.rotate(Math.toRadians(Heading),(p.x+sprite.getWidth(null)/2),(p.y+sprite.getHeight(null)/2));
+		g2D.transform(at);
+		g2D.drawImage(sprite,(int)p.x,(int)p.y,panel);
+		if(type.equals("heli")){//if its a helicopter draw the blade animations
+			g2D.drawImage(animation[counter/10],getX()-50,getY()-50,panel);
+			counter=(counter+1)%30;
+		}
+		g2D.setTransform(saveXform);
+		g.setColor(Color.WHITE);//set the color back to white so that the other drawing colors dont get messed up
+    }
+
+    //just accessor functions
+	public int getX(){return (int)p.x + (int)sprite.getWidth(null)/2;}
+	public int getY(){return (int)p.y + (int)sprite.getHeight(null)/2;}
+	public int getX2(){return (int)p.x ;}
+	public int getY2(){return (int)p.y ;}
+    public String getType(){return type;}
+    public int getHP(){return HP;}
+    public int getPower(){return Power;}
+    public int getSpeed(){return Speed;}
+    public void setHP(int l){HP = l;}
+
+    //we only use the set functions when the user is upgrading so we add the cost of the upgrade so that we can later calculate the sale price
+    public void setPower(int l){
+
+    	coinCost+=getPowerCost();
+    	Power = l;
+    }
+    public void setSpeed(int l){
+    	coinCost+=getSpeedCost();
+    	Speed = l;
+    }
+    //
+    public Rectangle getRect(){return planeRect;}
+    public String getMoveType(){return moveType;}
+    public int getRange(){return Radius;}
+    public void setRange(int l){
+    	coinCost+=getRadiusCost();
+    	Radius=l;
+    }
+    public int getCost(){return coinCost;}
+    public int getGlowX(){return -glowx;}
+    public int getGlowY(){return -glowy;}
+    public int getFireRate(){return fireRate;}
+    public void setFireRate(int l){
+    	coinCost+=getFireRateCost();
+    	fireRate=l;
+    }
+    public void setHeading(double h){Heading = h;}
+    public int Attack(){
+    	return Power;
+    }
+    public int getFireRateCost(){return fireRateM*(upgradeCount[3]+1);}
+    public int getPowerCost(){return powerM*(upgradeCount[1]+1);}
+    public int getSpeedCost(){return speedM*(upgradeCount[0]+1);}
+    public int getRadiusCost(){return radiusM*(upgradeCount[2]+1);}
+
+    public int getSalePrice(){
+    	return (coinCost)/2;
+    }
+
+
 }
