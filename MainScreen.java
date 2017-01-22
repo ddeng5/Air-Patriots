@@ -126,4 +126,53 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 	//if music is played.
 	boolean musicPlayed=false;
 
+
+    public MainScreen(GamePanel game){ //constuctor take sin the game panel to keep both of them in sync
+    	super();
+    	//for the cursor on the main screen
+    	imgCursor=new ImageIcon("images/cursor.png").getImage();
+    	Toolkit tk = Toolkit.getDefaultToolkit();
+    	normalCur = tk.createCustomCursor( imgCursor, new java.awt.Point( 5, 5 ), "cursor" );
+    	setCursor(normalCur);
+    	//for the coin font that we use
+    	try{
+			coinFont = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("fonts/AgentOrange.ttf"))).deriveFont(0,12);
+			coinFontBig = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("fonts/AgentOrange.ttf"))).deriveFont(0,25);
+		}
+		catch(IOException ioe){
+			System.out.println("error loading AgentOrange.tff");
+		}
+		catch(FontFormatException e){
+		}
+    	//adds the pictures to the list...these are for the layers
+    	maps1[0]=grass1;
+   		maps1[1]=nuke1;
+   		maps1[2]=desert;
+   		maps1[3]=ice;
+
+   		maps2[0]=grass2;
+   		maps2[1]=nuke2;
+   		maps2[2]=desert2;
+   		maps2[3]=ice2;
+
+   		for(int i=0;i<4;i++){   ///making text files
+   			paths1[i]="level"+(i+1)+"a.txt";
+   			paths2[i]="level"+(i+1)+"b.txt";
+   			if(i>1){
+   				paths3[i]="level"+(i+1)+"c.txt";
+   			}
+   			else{
+   				paths3[i]=null;
+   			}
+   		}
+    	this.game=game;
+    	for(int i=0;i<4;i++){											//Loading Menu Level Preview
+			Image img = Toolkit.getDefaultToolkit().getImage("menuImages/"+(i+1)+".png");
+			levels[i]=img;
+		}
+
+		for(int i=0;i<7;i++){											//Loading All Images for Settings Pop-up Menu
+			Image img = Toolkit.getDefaultToolkit().getImage("menuImages/btns/"+(i+1)+".png");
+			settings[i]=img;
+		}
 }
