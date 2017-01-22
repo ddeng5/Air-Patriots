@@ -255,4 +255,116 @@ public class Plane {
     	}
     	Heading=Heading%360;//just so that the heading does not get huge, not nessesary just so its easier to debug
     }
+
+
+    public double distance(Point p, Point p2){//finds the distance from point a to point b, overloaded for convinence
+    	return Math.pow((Math.pow((p2.x - p.x),2) + Math.pow((p2.y - p.y),2)),0.5);
+    }
+    public double distance(int x,int y, Point p2){
+    	return distance(new Point(x,y),p2);
+    }
+
+    public void addPoint(int x, int y){//adds the point the the planes current path
+    	if (Pos.size()>0&&distance(Pos.get(0),new Point(x,y))<=50){//if the path is within 50 pixels from the first point in the path
+    		loop = true;//put the plane in a loop
+    	}else{
+    		Pos.add(new Point (x,y));//other wise just add it
+    	}
+
+    }
+    public String getStats(){//just getting the stats for debugging purposes
+    	return ("Type: "+type+"\n HP: "+HP+"\nPower: "+"\nSpeed: "+Speed+"\nRadius: "+Radius);
+    }
+    public String toString(){
+    	return getStats();
+    }
+    public ArrayList<Point> getPath(){//gets the current path that the plane is on
+    	return Pos;
+    }
+    public void clearPath(){//clears the current path that the plane is on, if its looped undo it
+    	Pos.clear();
+    	loop = false;
+    }
+
+    public Bullet shoot(ArrayList<Balloon> balloons){//checks wether or not the plane can shoot
+    	//depending on the type of plane they will shoot different so we farm off to different methods
+		if(type.equals("jet")){
+			return jetShoot(balloons);
+		}
+		if(type.equals("bomber")){
+			return bomberShoot(balloons);
+		}
+		if(type.equals("heli")){
+			return heliShoot(balloons);
+		}
+	return null;
+    }
+	public Bullet jetShoot(ArrayList<Balloon> balloons){//shoot method for the jet
+		for(Balloon b:balloons){
+			double h = Math.toDegrees(Math.atan2(p.y-b.getY(),p.x-b.getX()))+180;//find the angle from the plane to the balloon
+			if(distance(getX(),getY(),b.getPoint())<=Radius && Math.abs(Heading%360-h%360)<=30 && shotCount>fireRate){//if the distance from the plane to the balloon is within the radius and the angle is within 30 degrees from the front of the plane AND the shoot cooldown hads been reached
+				b.getHit(Attack());//hit the guy right away, this is more efficent than bullet tracking and for this game it works better because the balloons should not be able to dodge bullets
+				shotCount=0;//reset the shoot cooldown
+				return new Bullet(new Point((int)getX(),(int)getY()),b.getX(),b.getY(),panel,"jet");//return the bullet which will be added to a list in GamePanel
+			}
+		}
+		return null;//otherwise if you cant shoot then just return null and the method in gamePanel will filter it
+	}
+	public Bullet bomberShoot(ArrayList<Balloon> balloons){//shoot for the bomber
+		boolean shot=false;
+		for(Balloon b:balloons){
+			if(distance(getX(),getY(),b.getPoint())<=Radius && shotCount>fireRate){//checks the same thing as above but ignores the heading difference because it hits an area
+				b.getHit(Attack());//hit the balloon if its within but dont return right after so that it hits all balloons in one shot instead of just one
+				shot=true;//let the method know they we did find a balloon
+			}
+		}
+		if(shot){//if a balloon was found then draw the animation so that the bomber isnt wasting ammo, so to speak
+			shotCount=0;
+			return new Bullet(new Point((int)getX(),(int)getY()),0,0,panel,"bomber");
+		}
+		return null;
+	}
+
+	public Bullet heliShoot(ArrayList<Balloon> balloons){//heli shoot is exactly the same as jet shoot except it returns a helit type bullet
+		for(Balloon b:balloons){//i realize this method could be eliminated quite easily but at this point its not worth it
+			double h = Math.toDegrees(Math.atan2(p.y-b.getY(),p.x-b.getX()))+180;
+			if(distance(getX(),getY(),b.getPoint())<=Radius && Math.abs(Heading%360-h%360)<=30 && shotCount>fireRate){
+				b.getHit(Attack());
+				shotCount=0;
+				return new Bullet(new Point((int)getX(),(int)getY()),b.getX(),b.getY(),panel,"heli");
+			}
+		}
+		return null;
+	}
+
+
+	public boolean isOffScreen(int x,int y){//checks if the given point is off the screen, useful for checking the planes on screen state
+		if(x+50<0 || x-50>1280){
+			return true;
+		}
+		if(y+50<0 || y-50>750){
+			return true;
+		}
+	return false;
+	}
+	public boolean isOffScreen(Point p){//overloaded for ease
+		return isOffScreen((int)p.x,(int)p.y);
+	}
+	private int greaterAngle(double a1,double a2)//this method finds wether its faster to go clock wise or counter clockwise to get from angle a1 to a2
+    {//courtesy of Ron McKenzie, thanks sir
+		int ang1 = ((int)(a1)+360)%360;//get the angles positive and within 0-360
+		int ang2 = ((int)(a2)+360)%360;
+
+		if(ang2 == ang1)  //if the angles are equal then return 0
+		    return 0;
+		if(ang2 > ang1 && ang2 - ang1 <= 180) //if angle 2 is greater than angle one and the difference between the 2 is less than 180
+		    return 1;//its faster to go right
+		if(ang2 < ang1 && (ang2+360) - ang1 <= 180)//aswell as if ang2 is less than ang1 and the difference is less than 180
+		    return 1;
+		return -1;//if nothing gets returned up to here then its fastest to go left
+    }
+
+    public void getHit(int x){//this is a tricky one, dont really remeber what we did here.
+    	HP-=x;
+    }
 }
