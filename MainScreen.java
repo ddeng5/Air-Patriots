@@ -268,4 +268,92 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 
 		}
 	}
+
+
+
+//MOUSE METHODS
+	public void mouseEntered( MouseEvent e ) {}
+  	public void mouseExited( MouseEvent e ) {}
+  	public void mouseClicked( MouseEvent e ) {}
+  	public void mousePressed( MouseEvent e ) {
+      	isButtonPressed = true;
+      	if((settingBox.contains(mx,my))==false && isButtonPressed == true){	//Settings is closed if mouse is clicked outside the settings pop-up
+			settingEnabled=false;
+		}
+   }
+   	public void mouseReleased( MouseEvent e ) {
+   		if (currentSelect.contains(mx,my)&&settingEnabled == false && helpEnabled == false){ //if you select the map
+   		//pretty much does the same thing as if you press enter, look at that code
+   			try{
+				Level1a.clear();
+				Level1b.clear();
+				Level1c.clear();
+				textFile(Level1a,paths1[loc]);
+    			textFile(Level1b,paths2[loc]);
+    			if(paths3[loc]!=null){
+    				textFile(Level1c,paths3[loc]);
+    			}
+    			mainMusic.stop();
+				game.resetEverything(Level1a,Level1b,Level1c,maps1[loc],maps2[loc],themeMusic[loc]);
+				musicPlayed=false;
+
+			}
+			catch(IOException ex){
+			}
+   		}
+   		//This comment is for moving map left and right. does the same thing pressing left arrow key and right arrow key
+   		if(nextSelect.contains(mx,my)&&settingEnabled == false && helpEnabled == false){
+   			loc=(loc+1)%4;
+   		}
+   		if(prevSelect.contains(mx,my)&&settingEnabled == false && helpEnabled == false){
+   			if(loc==0){
+   				loc=3;
+   			}
+   			else{
+   				loc-=1;
+   			}
+   		}
+   		//if the help bar is enabled, it just de-enables (?) it.
+   		if(helpBarRect.contains(mx,my)){
+   			helpEnabled = !helpEnabled;
+   		}
+   		if(settingBtn.contains(mx,my)){
+			settingEnabled=!settingEnabled;
+		}
+   		if (helpEnabled&&helpNextRect.contains(mx,my)){ //if you press the left button or the right button on the
+   		//move the help pictures
+   			helpPicCounter++;
+   		}
+   		if (helpEnabled&&helpPrevRect.contains(mx,my)){
+   			helpPicCounter--;
+   		}
+   		if (!settingBox.contains(mx,my)&&!helpBarRect.contains(mx,my)){//for the sound box
+   			helpEnabled = false;
+   			helpPicCounter = 10000000*helpPics.length;
+   		}
+		}
+
+
+		public void update(){//updates the mx,my so that the button knows exactly where the mouse is
+		this.mx=panel.mx;
+		this.my=panel.my;
+		this.mousePushed=panel.isButtonPressed;
+	}
+	public void draw(Graphics g){ //just draws it
+		update();
+		g.drawImage(normal,x,y,panel); //normal
+		if(rect.contains(mx,my)){
+			g.drawImage(hover,x,y,panel);//if you're on the rect then hover
+			if(mousePushed){ //if youre pressing it then pushed
+				g.drawImage(pushed,x,y,panel);
+			}
+		}
+	}
+	public boolean isHover(){ //if its over
+		update();
+		if(rect.contains(mx,my)){
+			return true;
+		}
+		return false;
+	}
 }
