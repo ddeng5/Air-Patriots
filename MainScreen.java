@@ -209,6 +209,118 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
     }
 
 
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		if(loaded<50){													//Loading Screen Display
+			g.drawImage(main,0,0,this);									//Draws images that will be used later on
+			g.setFont(loadingFont);
+			g.setColor(Color.WHITE);
+			g.drawString("Loading",600,680);
+			g.drawImage(levels[0],5000,5000,this);
+			g.drawImage(levels[1],5000,5000,this);
+			g.drawImage(levels[2],5000,5000,this);
+			g.drawImage(levels[3],5000,5000,this);
+			g.drawImage(blue,5000,5000,this);
+			g.drawImage(settings[0],5000,5000,null);
+			g.drawImage(settings[1],5000,5000,null);
+			g.drawImage(settings[2],5000,5000,null);
+			g.drawImage(cloud1,cloudmove1%(1280+512) - 512,400,this);
+			loaded+=1;
+		}
+		if(loaded>=50){													//Once Loading is Done, Goes to Main Menu
+			cloudmove1++;
+			for(int i=0;i<4;i++){
+				if(loc==i){
+					g.drawImage(blue,0,0,this);							//Draws Blue Background for Main Menu
+					g.drawImage(cloud1,cloudmove1%(1280+512) - 512,400,this);//Draws cloud, then adds it back to front once reaches end
+					g.drawImage(levels[i],0,0,this);					//Draws Level Previews
+				}
+			}
+			if(settingBtn.contains(mx,my)){								//Settings Pop-up
+				if(isButtonPressed==true && !settingEnabled){
+					g.drawImage(settings[2],600,600,null);
+				}
+				else{
+					g.drawImage(settings[1],600,600,null);
+				}
+			}
+			else{
+				g.drawImage(settings[0],600,600,null);
+			}
+			setFont(coinFontBig);
+			g.setColor(Color.WHITE);
+			g.drawImage(greyBarNormal,helpBarRect.x,helpBarRect.y,this);
+
+
+			if (helpBarRect.contains(mx,my)){
+				g.drawImage(greyBarHover,helpBarRect.x,helpBarRect.y,this);
+			} //the help bar rectangles
+			if (helpBarRect.contains(mx,my)&&isButtonPressed){
+				g.drawImage(greyBarPushed,helpBarRect.x,helpBarRect.y,this);
+			}
+
+			g.drawString("HELP",helpBarRect.x+73,helpBarRect.y+50);
+
+
+			if (helpEnabled){//if the help menu is enabled
+				g.drawImage(settingspic,330,120,null); //draws the rectangle that pops up
+				g.drawImage(greenBarNormal,helpNextRect.x,helpNextRect.y,this); //this is the button code - normal button
+				if (helpNextRect.contains(mx,my)){ //if you're over the button then its the button that is lit up
+					g.drawImage(greenBarHover,helpNextRect.x,helpNextRect.y,this);
+				}
+				if (helpNextRect.contains(mx,my)&&isButtonPressed){//if you pressed it then its the pushed button
+					g.drawImage(greenBarPushed,helpNextRect.x,helpNextRect.y,this);
+				}
+				g.drawString("NEXT",helpNextRect.x+65,helpNextRect.y+42);
+
+				g.drawImage(greenBarNormal,helpPrevRect.x,helpPrevRect.y,this);
+				if (helpPrevRect.contains(mx,my)){//same stuff for the previous button
+					g.drawImage(greenBarHover,helpPrevRect.x,helpPrevRect.y,this);
+				}
+				if (helpPrevRect.contains(mx,my)&&isButtonPressed){
+					g.drawImage(greenBarPushed,helpPrevRect.x,helpPrevRect.y,this);
+				}
+				g.drawString("PREV",helpPrevRect.x+65,helpPrevRect.y+42);
+
+				g.drawImage(helpPics[helpPicCounter%helpPics.length],settingBox.x+50,settingBox.y+100,this);
+			}
+
+			if(settingEnabled==true){ //if the setting menu is turned
+				g.drawImage(settingspic,330,120,null);//draws the setting pictures
+				g.drawImage(settings[5],389,235,null);
+				g.drawImage(settings[6],600,248,null);
+				if (soundEnabled){ //if the sound is enabled
+					g.drawImage(settings[4],soundSlideRect.x,soundSlideRect.y,null);
+				}else{
+					g.drawImage(settings[4],600,248,null);
+				}
+
+				g.setFont(settingFont);
+				g.setColor(Color.WHITE);
+				g.drawString("Sound",456,260);
+
+				if(soundEnabled){										//Sound Settings
+					g.drawImage(settings[3],389,235,null);
+				}
+				if(soundSlideRect.x<=600){//moves the slider left and right
+					mainMusic.stop();
+					soundEnabled=false;
+					playCheck=true;
+				}
+				else if(soundSlideRect.x>600){
+					soundEnabled=true;
+					if(playCheck){
+						mainMusic.loop();
+						playCheck=false;
+					}
+
+				}
+			}
+
+			checkKeys();	//checks what keys are pressed
+		}
+		//g.drawRect(currentSelect.x,currentSelect.y,currentSelect.width,currentSelect.height);
+	}
 
 	public void checkKeys(){ //checks what keys are presed
 		if((keys[KeyEvent.VK_ESCAPE] && settingEnabled) || (keys[KeyEvent.VK_ESCAPE] && helpEnabled)){				//If Escape is pressed, closes settings
@@ -268,7 +380,6 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 
 		}
 	}
-
 
 
 //MOUSE METHODS
@@ -331,29 +442,33 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
    			helpEnabled = false;
    			helpPicCounter = 10000000*helpPics.length;
    		}
+
+   		if(soundBox.contains(mx,my)){										//Toggles Sound on/off
+					soundEnabled = !soundEnabled;
+
+					if(soundEnabled){ //for moving the slider for the volume to off when sound is not playing
+						soundSlideRect.x=650;
+						mainMusic.loop();
+					}
+					if(!soundEnabled){
+						playCheck=true;
+						soundSlideRect.x=591;
+						mainMusic.stop();
+					}
 		}
 
-
-		public void update(){//updates the mx,my so that the button knows exactly where the mouse is
-		this.mx=panel.mx;
-		this.my=panel.my;
-		this.mousePushed=panel.isButtonPressed;
-	}
-	public void draw(Graphics g){ //just draws it
-		update();
-		g.drawImage(normal,x,y,panel); //normal
-		if(rect.contains(mx,my)){
-			g.drawImage(hover,x,y,panel);//if you're on the rect then hover
-			if(mousePushed){ //if youre pressing it then pushed
-				g.drawImage(pushed,x,y,panel);
-			}
-		}
-	}
-	public boolean isHover(){ //if its over
-		update();
-		if(rect.contains(mx,my)){
-			return true;
-		}
-		return false;
-	}
+      isButtonPressed = false;
+   }
+   	public void mouseMoved( MouseEvent e ) {
+      	mx = e.getX();
+      	my = e.getY();
+   }
+   	public void mouseDragged( MouseEvent e ) {
+   		mx = e.getX();
+      	my = e.getY();
+   		if (soundSlideRect2.contains(mx,my)&&isButtonPressed&&mx>600&&mx<600+226){	//Moves the sound slider
+      			soundSlideRect.x=mx-10;
+      			sm.changeVolume((soundSlideRect.x-600.0)/226.0);//sets the volume
+      		}
+      	}
 }
