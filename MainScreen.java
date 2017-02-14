@@ -9,7 +9,7 @@ import javax.sound.sampled.AudioSystem;
 import java.applet.*;
 
 
-public class MainScreen extends JPanel implements KeyListener,MouseListener, MouseMotionListener{
+public class MainScreen extends JPanel implements KeyListener,MouseListener, MouseMotionListener{ 
 	Image main = new ImageIcon("menuImages/main.jpg").getImage();			//Loading Screen Picture
 	Image blue = new ImageIcon("menuImages/blue.jpg").getImage();			//Blue BackGround for Main Menu
 	Image cloud1 = new ImageIcon("menuImages/cloud/3.png").getImage();		//Cloud Picture for Main Menu
@@ -32,42 +32,42 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
     Rectangle settingBox = new Rectangle(330,120,620,480);				//Setting pop-up image container
     Rectangle settingBtn = new Rectangle(600,600,132,104);				//Settings Btns image container
     static GamePanel game;
-
+    
     Image rightArrowNormal = new ImageIcon("images/rightArrowNormal.png").getImage();
     Image rightArrowHover = new ImageIcon("images/rightArrowHover.png").getImage();
     Image rightArrowPushed = new ImageIcon("images/rightArrowPushed.png").getImage();
     Image leftArrowNormal = new ImageIcon("images/leftArrowNormal.png").getImage();
     Image leftArrowHover = new ImageIcon("images/leftArrowHover.png").getImage();
     Image leftArrowPushed = new ImageIcon("images/leftArrowPushed.png").getImage();
-
+    
     boolean playCheck=false;
-
+    
     Font coinFont,coinFontBig;
-
+    
     //Rectangle mapRightRect = new Rectangle(1100,460,rightArrowNormal.getWidth(null),rightArrowNormal.getHeight(null));
    //Rectangle mapLeftRect = new Rectangle(180-rightArrowNormal.getWidth(null),460,rightArrowNormal.getWidth(null),rightArrowNormal.getHeight(null));
-
+    
     SoundMixer sm = new SoundMixer();
-
+    
     //all the maps and the paths for each of the levels, then we just pass it into the gamepanel when we
     //choose a map
-  static Image grass1 = new ImageIcon("images/grass.png").getImage();
+    static Image grass1 = new ImageIcon("images/grass.png").getImage(); 
 	static Image grass2 = new ImageIcon("images/grass2.png").getImage();
-
+	
 	static Image nuke1 = new ImageIcon("images/nuke.png").getImage();
 	static Image nuke2 = new ImageIcon("images/nuke2.png").getImage();
-
+	
 	static Image desert = new ImageIcon("images/desert.jpg").getImage();
 	static Image desert2 = new ImageIcon("images/desert2.png").getImage();
-
+	
 	static Image ice = new ImageIcon("images/ice.png").getImage();
 	static Image ice2 = new ImageIcon("images/ice2.png").getImage();
-
+	
 	static ArrayList<Point> Level1a = new ArrayList();
 	static ArrayList<Point> Level1b = new ArrayList();
 	static ArrayList<Point> Level1c = new ArrayList();
 	//END MAP STUFF
-
+	
 	//these are the pictures for the buttons
 	Image greyBarNormal = new ImageIcon("images/greyBarNormal.png").getImage();
 	Image greyBarHover = new ImageIcon("images/greyBarHover.png").getImage();
@@ -81,7 +81,7 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 	//the cursors and the picture
 	Cursor normalCur;
 	Image imgCursor;
-
+	
 	//the music for each of the level. we pass this into the gamepanel too
 	String [] themeMusic = new String[]{"sounds/Isaac Shepard - Load and Explode2.wav",
 										"sounds/Isaac Shepard - Slick Shooter.wav",
@@ -90,7 +90,7 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 										};
 	//if the help menu is up
 	boolean helpEnabled = false;
-
+	
 	Image[] maps1=new Image[4];
 	//the help pictures for the help screen
 	Image [] helpPics = new Image[]{new ImageIcon("images/helpPic1.png").getImage(),//FONT IS BODONI MT BOLDED
@@ -125,8 +125,7 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 	Rectangle currentSelect=new Rectangle(479,219,807-479,503-219);
 	//if music is played.
 	boolean musicPlayed=false;
-
-
+	
     public MainScreen(GamePanel game){ //constuctor take sin the game panel to keep both of them in sync
     	super();
     	//for the cursor on the main screen
@@ -146,15 +145,15 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 		}
     	//adds the pictures to the list...these are for the layers
     	maps1[0]=grass1;
-   		maps1[1]=nuke1;
-   		maps1[2]=desert;
+   		maps1[1]=nuke1; 
+   		maps1[2]=desert;	
    		maps1[3]=ice;
-
+   			
    		maps2[0]=grass2;
    		maps2[1]=nuke2;
    		maps2[2]=desert2;
    		maps2[3]=ice2;
-
+   		
    		for(int i=0;i<4;i++){   ///making text files
    			paths1[i]="level"+(i+1)+"a.txt";
    			paths2[i]="level"+(i+1)+"b.txt";
@@ -165,19 +164,19 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
    				paths3[i]=null;
    			}
    		}
-    	this.game=game;
+    	this.game=game;													
     	for(int i=0;i<4;i++){											//Loading Menu Level Preview
 			Image img = Toolkit.getDefaultToolkit().getImage("menuImages/"+(i+1)+".png");
 			levels[i]=img;
 		}
-
+		
 		for(int i=0;i<7;i++){											//Loading All Images for Settings Pop-up Menu
 			Image img = Toolkit.getDefaultToolkit().getImage("menuImages/btns/"+(i+1)+".png");
 			settings[i]=img;
 		}
-
+		
 		keys = new boolean[KeyEvent.KEY_LAST+1];
-
+		
 		try{															//Loading Font
 			loadingFont = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("fonts/AgentOrange.ttf"))).deriveFont(0,15);
 			settingFont = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("fonts/AgentOrange.ttf"))).deriveFont(0,20);
@@ -192,23 +191,23 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 		addMouseMotionListener(this);
 
     }
-    public void addNotify(){
+    public void addNotify(){ 
 		super.addNotify();
 		requestFocus();
 	}
-
-
-
-	public static void textFile(ArrayList l, String a) throws IOException {
+	
+	
+	
+	public static void textFile(ArrayList l, String a) throws IOException { 
     	Scanner inFile = new Scanner (new BufferedReader (new FileReader(a)));
     	while(inFile.hasNextLine()){
 			String [] per = inFile.nextLine().split(" ");
 			l.add(new Point(Double.parseDouble(per[0]),Double.parseDouble(per[1]),Double.parseDouble(per[2])));
 		}
-		inFile.close();
+		inFile.close(); 
     }
-
-
+    
+    
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		if(loaded<50){													//Loading Screen Display
@@ -250,18 +249,18 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 			setFont(coinFontBig);
 			g.setColor(Color.WHITE);
 			g.drawImage(greyBarNormal,helpBarRect.x,helpBarRect.y,this);
-
-
+			
+			
 			if (helpBarRect.contains(mx,my)){
 				g.drawImage(greyBarHover,helpBarRect.x,helpBarRect.y,this);
 			} //the help bar rectangles
 			if (helpBarRect.contains(mx,my)&&isButtonPressed){
 				g.drawImage(greyBarPushed,helpBarRect.x,helpBarRect.y,this);
 			}
-
+			
 			g.drawString("HELP",helpBarRect.x+73,helpBarRect.y+50);
-
-
+			
+			
 			if (helpEnabled){//if the help menu is enabled
 				g.drawImage(settingspic,330,120,null); //draws the rectangle that pops up
 				g.drawImage(greenBarNormal,helpNextRect.x,helpNextRect.y,this); //this is the button code - normal button
@@ -272,8 +271,8 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 					g.drawImage(greenBarPushed,helpNextRect.x,helpNextRect.y,this);
 				}
 				g.drawString("NEXT",helpNextRect.x+65,helpNextRect.y+42);
-
-				g.drawImage(greenBarNormal,helpPrevRect.x,helpPrevRect.y,this);
+				
+				g.drawImage(greenBarNormal,helpPrevRect.x,helpPrevRect.y,this); 
 				if (helpPrevRect.contains(mx,my)){//same stuff for the previous button
 					g.drawImage(greenBarHover,helpPrevRect.x,helpPrevRect.y,this);
 				}
@@ -281,24 +280,24 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 					g.drawImage(greenBarPushed,helpPrevRect.x,helpPrevRect.y,this);
 				}
 				g.drawString("PREV",helpPrevRect.x+65,helpPrevRect.y+42);
-
+				
 				g.drawImage(helpPics[helpPicCounter%helpPics.length],settingBox.x+50,settingBox.y+100,this);
 			}
-
+			
 			if(settingEnabled==true){ //if the setting menu is turned
 				g.drawImage(settingspic,330,120,null);//draws the setting pictures
 				g.drawImage(settings[5],389,235,null);
 				g.drawImage(settings[6],600,248,null);
 				if (soundEnabled){ //if the sound is enabled
 					g.drawImage(settings[4],soundSlideRect.x,soundSlideRect.y,null);
-				}else{
+				}else{ 
 					g.drawImage(settings[4],600,248,null);
 				}
-
+				
 				g.setFont(settingFont);
 				g.setColor(Color.WHITE);
 				g.drawString("Sound",456,260);
-
+				
 				if(soundEnabled){										//Sound Settings
 					g.drawImage(settings[3],389,235,null);
 				}
@@ -313,10 +312,10 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 						mainMusic.loop();
 						playCheck=false;
 					}
-
+					
 				}
 			}
-
+				
 			checkKeys();	//checks what keys are pressed
 		}
 		//g.drawRect(currentSelect.x,currentSelect.y,currentSelect.width,currentSelect.height);
@@ -337,7 +336,7 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 	}
 	public void keyTyped(KeyEvent e){}
 	public void keyPressed(KeyEvent e){
-
+		
 		keys[e.getKeyCode()] = true;
 	}
 	public void keyReleased(KeyEvent e){							//Goes Next/Prev. if Right or Left arrows is pressed
@@ -346,10 +345,10 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 			loc=(loc+1)%4;
 		}
 		if(e.getKeyCode()==KeyEvent.VK_RIGHT && helpEnabled){ //move the help menu pictures left or right
-			helpPicCounter++;
+			helpPicCounter++;	
 		}
 		if(e.getKeyCode()==KeyEvent.VK_LEFT && helpEnabled){
-			helpPicCounter--;
+			helpPicCounter--;	
 		}
 		if((e.getKeyCode()==KeyEvent.VK_ENTER && settingEnabled==false && helpEnabled==false)){ //if you choose a map
 			try{
@@ -361,33 +360,31 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
     			if(paths3[loc]!=null){
     				textFile(Level1c,paths3[loc]);
     			}
-    			mainMusic.stop(); //stop the music
+    			mainMusic.stop(); //stop the music 
 				game.resetEverything(Level1a,Level1b,Level1c,maps1[loc],maps2[loc],themeMusic[loc]);//this loads the new data
 				//and refreshes data
 				musicPlayed=false;
-
+				
 			}
 			catch(IOException ex){
 			}
 		}
-
+		
 		if(e.getKeyCode()==KeyEvent.VK_LEFT&& settingEnabled==false && helpEnabled==false){
 			if (loc!=0){ //moves the map choices left or right
 				loc=Math.abs((loc-1)%4);
 			}else{
 				loc = 3;
 			}
-
+			
 		}
 	}
-
-
 //MOUSE METHODS
 	public void mouseEntered( MouseEvent e ) {}
   	public void mouseExited( MouseEvent e ) {}
   	public void mouseClicked( MouseEvent e ) {}
   	public void mousePressed( MouseEvent e ) {
-      	isButtonPressed = true;
+      	isButtonPressed = true; 
       	if((settingBox.contains(mx,my))==false && isButtonPressed == true){	//Settings is closed if mouse is clicked outside the settings pop-up
 			settingEnabled=false;
 		}
@@ -407,13 +404,13 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
     			mainMusic.stop();
 				game.resetEverything(Level1a,Level1b,Level1c,maps1[loc],maps2[loc],themeMusic[loc]);
 				musicPlayed=false;
-
+				
 			}
 			catch(IOException ex){
 			}
    		}
    		//This comment is for moving map left and right. does the same thing pressing left arrow key and right arrow key
-   		if(nextSelect.contains(mx,my)&&settingEnabled == false && helpEnabled == false){
+   		if(nextSelect.contains(mx,my)&&settingEnabled == false && helpEnabled == false){ 
    			loc=(loc+1)%4;
    		}
    		if(prevSelect.contains(mx,my)&&settingEnabled == false && helpEnabled == false){
@@ -442,10 +439,9 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
    			helpEnabled = false;
    			helpPicCounter = 10000000*helpPics.length;
    		}
-
    		if(soundBox.contains(mx,my)){										//Toggles Sound on/off
 					soundEnabled = !soundEnabled;
-
+					
 					if(soundEnabled){ //for moving the slider for the volume to off when sound is not playing
 						soundSlideRect.x=650;
 						mainMusic.loop();
@@ -456,19 +452,30 @@ public class MainScreen extends JPanel implements KeyListener,MouseListener, Mou
 						mainMusic.stop();
 					}
 		}
-
+	
       isButtonPressed = false;
    }
    	public void mouseMoved( MouseEvent e ) {
-      	mx = e.getX();
+      	mx = e.getX(); 
       	my = e.getY();
    }
    	public void mouseDragged( MouseEvent e ) {
-   		mx = e.getX();
+   		mx = e.getX(); 
       	my = e.getY();
    		if (soundSlideRect2.contains(mx,my)&&isButtonPressed&&mx>600&&mx<600+226){	//Moves the sound slider
       			soundSlideRect.x=mx-10;
-      			sm.changeVolume((soundSlideRect.x-600.0)/226.0);//sets the volume
-      		}
+      			sm.changeVolume((soundSlideRect.x-600.0)/226.0);//sets the volume 
+      		} 
       	}
 }
+
+
+
+
+
+
+
+
+
+
+
